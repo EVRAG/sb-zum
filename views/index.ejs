@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Делимобиль</title>
+</head>
+
+<body>
+    <header class="header">
+        <img src="img/logo_sber.png" class="logo" alt="Делимобиль">
+    </header>
+    <main class="main">
+        <div class="step is-active">
+            <div class="container">
+                <div class="heading-wrap">
+                    <h1 class="h1">Создай своё изображение</h1>
+                    <p class="text">Мы сгенерируем картинку по твоему текстовому запросу</p>
+                </div>
+                <form action="<%= apiUrl %>" method="post" class="form">
+                    <div class="form-input-wrap">
+                        <textarea class="form-input" rows="1" id="user_request" name="user_request"
+                            placeholder="Задай свой промпт" required></textarea>
+                        <!-- <button class="form-input-mic"><img src="img/mic.svg" alt=""></button> -->
+                    </div>
+                    <div class="form-helper-wrap">
+                        <% prompts.forEach(function(prompt) { %>
+                            <button class="form-helper-btn"><%= prompt %></button>
+                        <% }); %>
+                    </div>
+                    <div class="btn-wrap">
+                        <button class="btn btn-green-fill btn-step-next" type="submit" disabled>Сгенерировать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="step">
+            <div class="container">
+                <div class="generate-loading">
+                    <p class="text">Немного терпения...</p>
+                    <div class="heading-wrap">
+                        <h2 class="h2">твой запрос генерируется</h2>
+                    </div>
+                    <div class="generate-loader">
+                        <div class="generate-loader-progress"></div>
+                        <p class="generate-percent"><span>0</span>%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="container">
+                <div class="heading-wrap">
+                    <h2 class="h2">готово!</h2>
+                    <p class="text">Ты можешь посмотреть свой результат или сгенерировать изображение еще раз</p>
+                </div>
+                <div class="btn-wrap">
+                    <!-- <button class="btn btn-green-fill btn-step-next">смотреть результат</button> -->
+                    <button class="btn btn-step-first">сгенерировать еще</button>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="container">
+                <div class="heading-wrap">
+                    <h2 class="h2">СОЗДАЙ СВОЕ ИЗОБРАЖЕНИЕ</h2>
+                    <p class="text">Мы сгенерируем картинку по твоему текстовому запросу</p>
+                </div>
+            </div>
+            <div class="result-wrap">
+                <div class="result-line">
+                    <div class="result-item">
+                        <img src="img/image.jpg" alt="">
+                    </div>
+                    <div class="result-item">
+                        <img src="img/image.jpg" alt="">
+                    </div>
+                    <div class="result-item">
+                        <img src="img/image.jpg" alt="">
+                    </div>
+                    <div class="result-item">
+                        <img src="img/image.jpg" alt="">
+                    </div>
+                    <div class="result-item">
+                        <img src="img/image.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="result-action">
+                    <p class="text"><img src="img/arrow-right.svg" class="result-action-icon" alt=""> Скролль вправо,
+                        чтобы увидеть все варианты полученных изображений</p>
+                    <div class="btn-wrap">
+                        <button class="btn btn-green-fill  btn-step-first">сгенерировать еще</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
