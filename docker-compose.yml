@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      # FAL_KEY will be taken from your .env file or shell environment
+      - FAL_KEY=${FAL_KEY}
+      - FAL_MODEL_URL=${FAL_MODEL_URL}
+    volumes:
+      # Persist the latest-image.json file
+      - ./latest-image.json:/app/latest-image.json
+    # Load environment variables from .env file automatically
+    env_file:
+      - .env
+

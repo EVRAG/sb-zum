@@ -301,8 +301,8 @@ img {
 /* Mobile adjustments */
 @media (max-width: 767px) {
     body {
-        background-image: url(../img/bg-mobile.jpg);
-        background-position: center right;
+        background-image: url(../img/bg_sber.png);
+        background-position: center;
     }
 
     .header {
