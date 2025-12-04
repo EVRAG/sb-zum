@@ -12,6 +12,9 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+# Set default environment variable for port
+ENV PORT=3001
+
 # Expose the port the app runs on
 EXPOSE 3001
 
