@@ -13,10 +13,10 @@ RUN npm install
 COPY . .
 
 # Set default environment variable for port
-ENV PORT=80
+ENV PORT=3000
 
 # Expose the port the app runs on
-EXPOSE 80
+EXPOSE 3000
 
 # Define the command to run the app
 CMD [ "node", "server.js" ]

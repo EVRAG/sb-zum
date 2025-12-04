@@ -4,9 +4,9 @@ services:
   app:
     build: .
     ports:
-      - "80:80"
+      - "3000:3000"
     environment:
-      - PORT=80
+      - PORT=3000
       # FAL_KEY will be taken from your .env file or shell environment
       - FAL_KEY=${FAL_KEY}
       - FAL_MODEL_URL=${FAL_MODEL_URL}
