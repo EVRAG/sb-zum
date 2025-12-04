@@ -39,11 +39,15 @@ document.addEventListener("DOMContentLoaded", function () {
     suggestions.forEach(item => {
         item.addEventListener("click", function (e) {
             e.preventDefault();
-            let content = item.innerHTML;
-            mainInput.value += content + " ";
+            let content = item.innerText;
+            mainInput.value = content;
             commentResize(mainInput);
             checkValue(mainInput);
-            item.remove();
+            
+            // Сразу запускаем генерацию
+            if (!btnStepNext[0].disabled) {
+                btnStepNext[0].click();
+            }
         });
     });
 
