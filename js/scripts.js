@@ -40,13 +40,18 @@ document.addEventListener("DOMContentLoaded", function () {
         item.addEventListener("click", function (e) {
             e.preventDefault();
             
-            // 1. Вставляем текст
+            // 1. Вставляем текст (добавляем к текущему)
             let content = item.innerText;
-            mainInput.value = content;
+            // Добавляем пробел, если поле не пустое и не заканчивается пробелом
+            if (mainInput.value && !mainInput.value.endsWith(' ')) {
+                mainInput.value += " ";
+            }
+            mainInput.value += content;
+            
             commentResize(mainInput);
             checkValue(mainInput);
             
-            // 2. Обновляем (перемешиваем) список подсказок, чтобы показать другие
+            // 2. Обновляем (перемешиваем) список подсказок
             shuffle();
         });
     });
