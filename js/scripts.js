@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const config = window.appConfig || {};
-    const yandexApiKey = config.yandexApiKey || '';
-    const yandexFolderId = config.yandexFolderId || '';
-    const yandexOpenaiBaseUrl = config.yandexOpenaiBaseUrl || 'https://llm.api.cloud.yandex.net/v1';
-    const moderationPrompt = config.moderationPrompt || 'Ты модератор. Блокируй любой опасный или запрещенный контент. Отвечай JSON {"allow":true|false,"reason":"..."}';
+    const moderationEndpoint = '/moderate';
 
     // перемешивание подсказок в начале
     const suggestionsWrap = document.querySelector(".form-helper-wrap");
@@ -132,31 +129,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector('.form');
 
     async function moderatePrompt(text) {
-        if (!yandexApiKey || !yandexFolderId) {
-            alert('Модерация недоступна: отсутствуют ключи Yandex GPT.');
-            resetToFirstStep();
-            return false;
-        }
-
-        const model = `gpt://${yandexFolderId}/yandexgpt/latest`;
         try {
-            const response = await fetch(`${yandexOpenaiBaseUrl}/chat/completions`, {
+            const response = await fetch(moderationEndpoint, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Api-Key ${yandexApiKey}`,
-                    'x-folder-id': yandexFolderId
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model,
-                    messages: [
-                        { role: 'system', content: moderationPrompt },
-                        { role: 'user', content: text }
-                    ],
-                    max_tokens: 100,
-                    temperature: 0,
-                    response_format: { type: 'json_object' }
-                })
+                body: JSON.stringify({ user_request: text })
             });
 
             if (!response.ok) {
@@ -164,22 +143,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const data = await response.json();
-            const content = data?.choices?.[0]?.message?.content || '{}';
-            let parsed;
-            try {
-                parsed = JSON.parse(content);
-            } catch (e) {
-                const match = content.match(/\{[\s\S]*\}/);
-                if (match) {
-                    parsed = JSON.parse(match[0]);
-                } else {
-                    throw new Error('Invalid JSON from moderation model');
-                }
-            }
-
-            const allow = parsed.allow === true;
+            const allow = data.allow === true;
+            const reason = data.reason || 'Промпт отклонен модерацией';
             if (!allow) {
-                const reason = parsed.reason || 'Промпт отклонен модерацией';
                 alert(reason);
                 resetToFirstStep();
                 return false;

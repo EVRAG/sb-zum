@@ -27,6 +27,7 @@ const YANDEX_BUCKET_NAME = process.env.YANDEX_BUCKET_NAME;
 const YANDEX_API_KEY = process.env.YANDEX_API_KEY || '';
 const YANDEX_FOLDER_ID = process.env.YANDEX_FOLDER_ID || '';
 const YANDEX_OPENAI_BASE_URL = process.env.YANDEX_OPENAI_BASE_URL || 'https://llm.api.cloud.yandex.net/v1';
+const YANDEX_MODEL_URI = process.env.YANDEX_MODEL_URI || '';
 
 // Middleware
 app.use(bodyParser.json());
@@ -93,11 +94,64 @@ app.get('/', (req, res) => {
     res.render('index', { 
         prompts: prompts,
         apiUrl: '/generate_prompt', // Point to our own server
-        yandexApiKey: YANDEX_API_KEY,
-        yandexFolderId: YANDEX_FOLDER_ID,
-        yandexOpenaiBaseUrl: YANDEX_OPENAI_BASE_URL,
-        moderationPrompt: getModerationPrompt()
+        // Эти данные больше не пробрасываем на фронт для безопасности
     });
+});
+
+// Модерация промпта через YandexGPT (сервер-сайд, чтобы избежать CORS и не светить ключи)
+app.post('/moderate', async (req, res) => {
+    const { user_request } = req.body;
+    if (!user_request) {
+        return res.status(400).json({ error: 'Prompt is required' });
+    }
+
+    if (!YANDEX_API_KEY || !YANDEX_FOLDER_ID) {
+        console.error('Yandex GPT keys missing');
+        return res.status(500).json({ error: 'Moderation unavailable: missing Yandex credentials' });
+    }
+
+    const moderationPrompt = getModerationPrompt();
+    const model = YANDEX_MODEL_URI || (YANDEX_FOLDER_ID ? `gpt://${YANDEX_FOLDER_ID}/yandexgpt/latest` : 'yandexgpt/latest');
+
+    try {
+        const response = await axios.post(`${YANDEX_OPENAI_BASE_URL}/chat/completions`, {
+            model,
+            messages: [
+                { role: 'system', content: moderationPrompt },
+                { role: 'user', content: user_request }
+            ],
+            max_tokens: 100,
+            temperature: 0,
+            response_format: { type: 'json_object' }
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Api-Key ${YANDEX_API_KEY}`,
+                'x-folder-id': YANDEX_FOLDER_ID
+            }
+        });
+
+        const content = response.data?.choices?.[0]?.message?.content || '{}';
+        let parsed;
+        try {
+            parsed = JSON.parse(content);
+        } catch (e) {
+            const match = content.match(/\{[\s\S]*\}/);
+            if (match) {
+                parsed = JSON.parse(match[0]);
+            } else {
+                throw new Error('Invalid JSON from moderation model');
+            }
+        }
+
+        const allow = parsed.allow === true;
+        const reason = parsed.reason || '';
+        return res.json({ allow, reason });
+
+    } catch (error) {
+        console.error('Moderation request failed:', error.response ? error.response.data : error.message);
+        return res.status(500).json({ error: 'Moderation failed' });
+    }
 });
 
 // Эндпоинт для получения последней картинки (для внешнего сервера)
