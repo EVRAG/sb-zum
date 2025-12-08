@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const config = window.appConfig || {};
+    const yandexApiKey = config.yandexApiKey || '';
+    const yandexFolderId = config.yandexFolderId || '';
+    const yandexOpenaiBaseUrl = config.yandexOpenaiBaseUrl || 'https://llm.api.cloud.yandex.net/v1';
+    const moderationPrompt = config.moderationPrompt || 'Ты модератор. Блокируй любой опасный или запрещенный контент. Отвечай JSON {"allow":true|false,"reason":"..."}';
+
     // перемешивание подсказок в начале
     const suggestionsWrap = document.querySelector(".form-helper-wrap");
     const suggestions = document.querySelectorAll(".form-helper-btn");
@@ -58,6 +64,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // шаги
     const steps = document.querySelectorAll(".step");
+    function resetToFirstStep() {
+        steps.forEach(element => element.classList.remove('is-active'));
+        steps[0].classList.add('is-active');
+        document.body.classList.remove("bg-load");
+    }
+
     function handleStep() {
         const currentStep = document.querySelector('.step.is-active');
         const nextStep = currentStep.nextElementSibling;
@@ -118,7 +130,70 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // отправка данных в форме
     const form = document.querySelector('.form');
-    form.addEventListener('submit', function (e) {
+
+    async function moderatePrompt(text) {
+        if (!yandexApiKey || !yandexFolderId) {
+            alert('Модерация недоступна: отсутствуют ключи Yandex GPT.');
+            resetToFirstStep();
+            return false;
+        }
+
+        const model = `gpt://${yandexFolderId}/yandexgpt/latest`;
+        try {
+            const response = await fetch(`${yandexOpenaiBaseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Api-Key ${yandexApiKey}`,
+                    'x-folder-id': yandexFolderId
+                },
+                body: JSON.stringify({
+                    model,
+                    messages: [
+                        { role: 'system', content: moderationPrompt },
+                        { role: 'user', content: text }
+                    ],
+                    max_tokens: 100,
+                    temperature: 0,
+                    response_format: { type: 'json_object' }
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Moderation request failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const content = data?.choices?.[0]?.message?.content || '{}';
+            let parsed;
+            try {
+                parsed = JSON.parse(content);
+            } catch (e) {
+                const match = content.match(/\{[\s\S]*\}/);
+                if (match) {
+                    parsed = JSON.parse(match[0]);
+                } else {
+                    throw new Error('Invalid JSON from moderation model');
+                }
+            }
+
+            const allow = parsed.allow === true;
+            if (!allow) {
+                const reason = parsed.reason || 'Промпт отклонен модерацией';
+                alert(reason);
+                resetToFirstStep();
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.error('Moderation error:', error);
+            alert('Ошибка модерации. Попробуйте еще раз.');
+            resetToFirstStep();
+            return false;
+        }
+    }
+
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const formData = {
@@ -126,6 +201,11 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         console.log(formData);
+
+        const isAllowed = await moderatePrompt(formData.user_request);
+        if (!isAllowed) {
+            return;
+        }
 
         fetch(form.action, {
             method: 'POST',

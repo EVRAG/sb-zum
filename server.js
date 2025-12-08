@@ -24,6 +24,9 @@ const s3Client = new S3Client({
 });
 
 const YANDEX_BUCKET_NAME = process.env.YANDEX_BUCKET_NAME;
+const YANDEX_API_KEY = process.env.YANDEX_API_KEY || '';
+const YANDEX_FOLDER_ID = process.env.YANDEX_FOLDER_ID || '';
+const YANDEX_OPENAI_BASE_URL = process.env.YANDEX_OPENAI_BASE_URL || 'https://llm.api.cloud.yandex.net/v1';
 
 // Middleware
 app.use(bodyParser.json());
@@ -41,6 +44,7 @@ app.use('/fonts', express.static(path.join(__dirname, 'fonts')));
 
 // Хранилище для последней картинки (в файле для персистентности)
 const DB_FILE = path.join(__dirname, 'latest-image.json');
+const MODERATION_PROMPT_FILE = path.join(__dirname, 'moderationPrompt.txt');
 
 function saveLatestImage(url) {
     try {
@@ -73,11 +77,26 @@ function getPrompts() {
     }
 }
 
+function getModerationPrompt() {
+    try {
+        if (fs.existsSync(MODERATION_PROMPT_FILE)) {
+            return fs.readFileSync(MODERATION_PROMPT_FILE, 'utf8');
+        }
+    } catch (err) {
+        console.error('Error reading moderationPrompt.txt:', err);
+    }
+    return 'Ты модератор. Блокируй любой контент про войну, Украину, Россию, насилие, экстремизм, политику, дискриминацию. Разрешай только безопасные запросы. Отвечай JSON: {"allow":true|false,"reason":"..."}';
+}
+
 app.get('/', (req, res) => {
     const prompts = getPrompts();
     res.render('index', { 
         prompts: prompts,
-        apiUrl: '/generate_prompt' // Point to our own server
+        apiUrl: '/generate_prompt', // Point to our own server
+        yandexApiKey: YANDEX_API_KEY,
+        yandexFolderId: YANDEX_FOLDER_ID,
+        yandexOpenaiBaseUrl: YANDEX_OPENAI_BASE_URL,
+        moderationPrompt: getModerationPrompt()
     });
 });
 

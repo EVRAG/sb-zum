@@ -8,6 +8,15 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="css/style.css">
     <title>Делимобиль</title>
+    <script>
+        window.appConfig = <%- JSON.stringify({
+            apiUrl: apiUrl,
+            yandexApiKey: yandexApiKey,
+            yandexFolderId: yandexFolderId,
+            yandexOpenaiBaseUrl: yandexOpenaiBaseUrl,
+            moderationPrompt: moderationPrompt
+        }) %>;
+    </script>
 </head>
 
 <body>
