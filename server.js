@@ -114,6 +114,7 @@ app.post('/moderate', async (req, res) => {
     const model = YANDEX_MODEL_URI || (YANDEX_FOLDER_ID ? `gpt://${YANDEX_FOLDER_ID}/yandexgpt/latest` : 'yandexgpt/latest');
 
     try {
+        console.log('[moderation] start', { model, user_request });
         const response = await axios.post(`${YANDEX_OPENAI_BASE_URL}/chat/completions`, {
             model,
             messages: [
@@ -131,6 +132,8 @@ app.post('/moderate', async (req, res) => {
             }
         });
 
+        console.log('[moderation] raw response', response.data);
+
         const content = response.data?.choices?.[0]?.message?.content || '{}';
         let parsed;
         try {
@@ -140,6 +143,7 @@ app.post('/moderate', async (req, res) => {
             if (match) {
                 parsed = JSON.parse(match[0]);
             } else {
+                console.error('[moderation] invalid JSON content', content);
                 throw new Error('Invalid JSON from moderation model');
             }
         }
