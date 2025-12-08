@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const app = express();
 
@@ -11,6 +12,18 @@ const PORT = process.env.PORT || 3000;
 const API_URL = process.env.API_URL || '/generate_prompt'; // Default to local endpoint
 const FAL_KEY = process.env.FAL_KEY;
 const FAL_MODEL_URL = process.env.FAL_MODEL_URL || 'https://queue.fal.run/fal-ai/flux-pro/v1.1'; // Using a high quality model default, can be changed to nano-banana-pro if needed
+
+// Yandex S3 Configuration
+const s3Client = new S3Client({
+    region: process.env.YANDEX_REGION || 'ru-central1',
+    endpoint: process.env.YANDEX_ENDPOINT || 'https://storage.yandexcloud.net',
+    credentials: {
+        accessKeyId: process.env.YANDEX_ACCESS_KEY_ID,
+        secretAccessKey: process.env.YANDEX_SECRET_ACCESS_KEY
+    }
+});
+
+const YANDEX_BUCKET_NAME = process.env.YANDEX_BUCKET_NAME;
 
 // Middleware
 app.use(bodyParser.json());
@@ -115,6 +128,45 @@ async function getResult(requestId) {
     return response.data;
 }
 
+// Функция загрузки в S3
+async function uploadToS3(imageUrl) {
+    if (!process.env.YANDEX_ACCESS_KEY_ID || !process.env.YANDEX_BUCKET_NAME) {
+        console.warn('Yandex S3 credentials missing. Skipping upload.');
+        return imageUrl;
+    }
+
+    try {
+        // Скачиваем картинку
+        const response = await axios({
+            url: imageUrl,
+            method: 'GET',
+            responseType: 'arraybuffer'
+        });
+
+        const buffer = Buffer.from(response.data, 'binary');
+        const fileName = `generated_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+
+        const command = new PutObjectCommand({
+            Bucket: YANDEX_BUCKET_NAME,
+            Key: fileName,
+            Body: buffer,
+            ContentType: 'image/jpeg'
+            // ACL: 'public-read' // Uncomment if bucket is not public by default and you need ACLs
+        });
+
+        await s3Client.send(command);
+
+        // Формируем публичную ссылку
+        const s3Url = `${process.env.YANDEX_ENDPOINT}/${YANDEX_BUCKET_NAME}/${fileName}`;
+        console.log('Image uploaded to S3:', s3Url);
+        return s3Url;
+
+    } catch (error) {
+        console.error('Error uploading to S3:', error);
+        return imageUrl; // Fallback to original URL if upload fails
+    }
+}
+
 app.post('/generate_prompt', async (req, res) => {
     const { user_request } = req.body;
     
@@ -166,7 +218,14 @@ app.post('/generate_prompt', async (req, res) => {
 
         // Сохраняем ссылку
         if (imageUrl) {
-            saveLatestImage(imageUrl);
+            // Загружаем в Yandex S3
+            const s3Url = await uploadToS3(imageUrl);
+            
+            // Сохраняем персистентную S3 ссылку (или оригинал если не вышло)
+            saveLatestImage(s3Url);
+            
+            // Обновляем imageUrl для ответа фронту, чтобы он тоже использовал S3 ссылку
+            imageUrl = s3Url;
         }
 
         res.json({ 
