@@ -157,7 +157,8 @@ async function uploadToS3(imageUrl) {
         await s3Client.send(command);
 
         // Формируем публичную ссылку
-        const s3Url = `${process.env.YANDEX_ENDPOINT}/${YANDEX_BUCKET_NAME}/${fileName}`;
+        // Базовый URL для Yandex Cloud Object Storage всегда https://storage.yandexcloud.net
+        const s3Url = `https://storage.yandexcloud.net/${YANDEX_BUCKET_NAME}/${fileName}`;
         console.log('Image uploaded to S3:', s3Url);
         return s3Url;
 
