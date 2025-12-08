@@ -82,29 +82,10 @@ app.get('/', (req, res) => {
 });
 
 // Эндпоинт для получения последней картинки (для внешнего сервера)
-app.get('/get_current_image', async (req, res) => {
+app.get('/get_current_image', (req, res) => {
     const data = getLatestImage();
     if (data && data.url) {
-        try {
-            // Скачиваем картинку чтобы отдать base64
-            const response = await axios({
-                url: data.url,
-                method: 'GET',
-                responseType: 'arraybuffer'
-            });
-            
-            const base64 = Buffer.from(response.data, 'binary').toString('base64');
-            const mimeType = 'image/jpeg'; // Assuming jpeg as per upload logic
-            
-            res.json({ 
-                url: data.url,
-                base64: `data:${mimeType};base64,${base64}`
-            });
-        } catch (error) {
-            console.error('Error fetching image for base64 conversion:', error.message);
-            // Если не удалось скачать, отдаем хотя бы URL
-            res.json({ url: data.url, error: 'Failed to fetch base64' });
-        }
+        res.json({ url: data.url });
     } else {
         res.status(404).json({ error: 'No image generated yet' });
     }
