@@ -1,7 +1,7 @@
 services:
   zavidovo:
     build:
-      context: ./web
+      context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"

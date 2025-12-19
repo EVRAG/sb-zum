@@ -27,6 +27,13 @@ docker compose up --build
 - App: `http://localhost:3000`
 - WebSocket: `ws://localhost:3001`
 
+### Dokploy
+
+Dokploy должен собирать **Dockerfile**, а не `docker-compose.yml`.
+
+- **Dockerfile** в корне репозитория уже добавлен.
+- Если в Dokploy можно указать путь к Dockerfile, используй `Dockerfile` (root) или `web/Dockerfile`.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
