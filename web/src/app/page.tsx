@@ -11,10 +11,10 @@ import { LoadingScreen } from "./_components/screens/LoadingScreen";
 import { LocationScreen } from "./_components/screens/LocationScreen";
 import { ReviewScreen } from "./_components/screens/ReviewScreen";
 import { RulesScreen } from "./_components/screens/RulesScreen";
-import { useWebSocket } from "./_hooks/useWebSocket";
+import { getDefaultWsUrl, useWebSocket } from "./_hooks/useWebSocket";
 import type { Gender, LocationCard, Step } from "./_types/flow";
 
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3001";
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || getDefaultWsUrl();
 
 const LOCATIONS: LocationCard[] = [
   {

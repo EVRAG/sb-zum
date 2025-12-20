@@ -41,3 +41,11 @@ export function useWebSocket(url: string) {
   return { status, lastMessage, sendJson };
 }
 
+export function getDefaultWsUrl() {
+  if (typeof window !== "undefined") {
+    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${proto}//${window.location.host}/ws`;
+  }
+  return "ws://localhost:3000/ws";
+}
+
