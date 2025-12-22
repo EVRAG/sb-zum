@@ -22,10 +22,10 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.ts ./next.config.ts
 
-# WS server
+# Custom server (Next.js + WebSocket on /ws, same PORT)
 COPY --from=builder /app/server ./server
 
-EXPOSE 3000 3001
+EXPOSE 3000
 
 # Start Next + WebSocket (same port, /ws)
 CMD npm run start

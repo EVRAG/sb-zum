@@ -48,4 +48,3 @@ export function getDefaultWsUrl() {
   }
   return "ws://localhost:3000/ws";
 }
-

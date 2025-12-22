@@ -25,7 +25,7 @@ docker compose up --build
 ```
 
 - App: `http://localhost:3000`
-- WebSocket: `ws://localhost:3001`
+- WebSocket: `ws://localhost:3000/ws`
 
 ### Dokploy
 
@@ -33,6 +33,24 @@ Dokploy должен собирать **Dockerfile**, а не `docker-compose.ym
 
 - **Dockerfile** в корне репозитория уже добавлен.
 - Если в Dokploy можно указать путь к Dockerfile, используй `Dockerfile` (root) или `web/Dockerfile`.
+
+#### Что деплоим (сервисы)
+
+- **1 контейнер**: Next.js + WebSocket сервер.
+- **WebSocket** висит на **том же порту**, что и сайт, по пути **`/ws`** (Upgrade).
+
+#### Настройка в Dokploy (рекомендуемый вариант)
+
+- **Build**: Dockerfile `Dockerfile` (в корне репозитория).
+- **Internal port**: `3000` (Dokploy/Traefik будет проксировать на него).
+- **Domain + SSL**: включить HTTPS (тогда WS будет работать как `wss://<domain>/ws`).
+- **Env**:
+  - `PORT=3000` (опционально, по умолчанию уже 3000)
+  - `HOSTNAME=0.0.0.0` (опционально)
+
+#### Важно про `NEXT_PUBLIC_WS_URL`
+
+В прод-сборке Next.js `NEXT_PUBLIC_*` подставляются **на этапе build**. Поэтому в Dokploy проще **не задавать** `NEXT_PUBLIC_WS_URL` и использовать авто-детект по текущему домену: `wss://<domain>/ws` (или `ws://` без HTTPS).
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
