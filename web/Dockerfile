@@ -1,15 +1,15 @@
-FROM node:20-alpine AS deps
+FROM node:20-bookworm-slim AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-FROM node:20-alpine AS builder
+FROM node:20-bookworm-slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
-FROM node:20-alpine AS runner
+FROM node:20-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -22,10 +22,10 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.ts ./next.config.ts
 
-# WS server
+# Custom server (Next.js + WebSocket on /ws, same PORT)
 COPY --from=builder /app/server ./server
 
-EXPOSE 3000 3001
+EXPOSE 3000
 
 # Start Next + WebSocket (same port, /ws)
 CMD npm run start

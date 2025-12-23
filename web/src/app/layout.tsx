@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { Snowfall } from "./_components/Snowfall";
 
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
+        <Script src="/runtime-env.js" strategy="beforeInteractive" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
         <link
           rel="stylesheet"

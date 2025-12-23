@@ -4,6 +4,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type Status = "connecting" | "open" | "closed";
 
+type RuntimeEnv = Partial<{
+  NEXT_PUBLIC_WS_URL: string;
+  NEXT_PUBLIC_API_URL: string;
+}>;
+
+function getRuntimeEnv(): RuntimeEnv {
+  if (typeof window === "undefined") return {};
+  return (((window as unknown as { __RUNTIME_ENV__?: RuntimeEnv }).__RUNTIME_ENV__ as RuntimeEnv) || {});
+}
+
 export function useWebSocket(url: string) {
   const wsRef = useRef<WebSocket | null>(null);
   const [status, setStatus] = useState<Status>("connecting");
@@ -42,9 +52,18 @@ export function useWebSocket(url: string) {
 }
 
 export function getDefaultWsUrl() {
+  const env = getRuntimeEnv();
+  if (env.NEXT_PUBLIC_WS_URL) return env.NEXT_PUBLIC_WS_URL;
   if (typeof window !== "undefined") {
     const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
     return `${proto}//${window.location.host}/ws`;
   }
   return "ws://localhost:3000/ws";
+}
+
+export function getDefaultApiUrl() {
+  const env = getRuntimeEnv();
+  if (env.NEXT_PUBLIC_API_URL) return env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== "undefined") return window.location.origin;
+  return "http://localhost:3000";
 }

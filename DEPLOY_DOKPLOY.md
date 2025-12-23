@@ -20,13 +20,23 @@ The container starts `node web/server/app-server.js`, which runs Next.js and att
 - **Recommended**:
   - `PORT=3000` (optional; default is 3000)
   - `HOSTNAME=0.0.0.0` (optional)
-- **WebSocket URL**:
-  - By default the client derives it from the current site URL: `wss://<your-domain>/ws` (or `ws://` without HTTPS).
-  - Setting `NEXT_PUBLIC_WS_URL` is **not required** and is only useful if you want to force WS to a different host/path.
-    Keep in mind `NEXT_PUBLIC_*` is baked into the Next.js build, so changing it requires a rebuild/redeploy.
+- **Public runtime config (no rebuild)**:
+  - `NEXT_PUBLIC_WS_URL` (optional): if set, overrides WebSocket URL (otherwise `wss://<your-domain>/ws` or `ws://`).
+  - `NEXT_PUBLIC_API_URL` (optional): backend/base API URL for client usage.
 
 ### Quick checks after deploy
 
 - Open the site: `https://<your-domain>`
 - WebSocket endpoint: `wss://<your-domain>/ws`
+- Runtime env script: `https://<your-domain>/runtime-env.js`
+
+### Docker Hub (CI publish)
+
+This repo includes GitHub Actions workflow that builds the root `Dockerfile` and pushes the image to Docker Hub.
+
+Add repository secrets:
+
+- `DOCKERHUB_USERNAME`
+- `DOCKERHUB_TOKEN` (Docker Hub access token)
+- `DOCKERHUB_REPO` (repository name on Docker Hub, e.g. `sb-zum` or `zavidovo`)
 

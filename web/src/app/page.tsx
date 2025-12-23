@@ -14,8 +14,6 @@ import { RulesScreen } from "./_components/screens/RulesScreen";
 import { getDefaultWsUrl, useWebSocket } from "./_hooks/useWebSocket";
 import type { Gender, LocationCard, Step } from "./_types/flow";
 
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || getDefaultWsUrl();
-
 const LOCATIONS: LocationCard[] = [
   {
     id: "valday",
@@ -109,6 +107,7 @@ function parseStepFromPath(pathname: string): Step {
 }
 
 export default function Home() {
+  const WS_URL = getDefaultWsUrl();
   const [step, setStep] = useState<Step>("intro");
   const [gender, setGender] = useState<Gender | null>(null);
   const [locationId, setLocationId] = useState<string | null>(null);

@@ -6,6 +6,14 @@ const { WebSocketServer } = require("ws");
 const PORT = parseInt(process.env.PORT || "3000", 10);
 const HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
 
+function getRuntimeEnv() {
+  // Keep the allow-list explicit: only safe-to-expose vars
+  return {
+    NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL || "",
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "",
+  };
+}
+
 function broadcast(wss, message, exclude) {
   const data = typeof message === "string" ? message : JSON.stringify(message);
   wss.clients.forEach((client) => {
@@ -20,7 +28,19 @@ async function main() {
   const handle = app.getRequestHandler();
   await app.prepare();
 
-  const server = http.createServer((req, res) => handle(req, res));
+  const server = http.createServer((req, res) => {
+    // Runtime public env for client-side (without rebuild)
+    if (req.url === "/runtime-env.js") {
+      const env = getRuntimeEnv();
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/javascript; charset=utf-8");
+      res.setHeader("Cache-Control", "no-store, max-age=0");
+      res.end(`window.__RUNTIME_ENV__ = ${JSON.stringify(env)};`);
+      return;
+    }
+
+    return handle(req, res);
+  });
 
   const wss = new WebSocketServer({ server, path: "/ws" });
   wss.on("connection", (ws, req) => {
