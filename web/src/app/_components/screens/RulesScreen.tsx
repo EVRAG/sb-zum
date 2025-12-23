@@ -43,7 +43,7 @@ export function RulesScreen({ onNext }: { onNext: () => void }) {
 
         <div className="grid w-full grid-cols-1 gap-6 text-left sm:grid-cols-2">
           {features.map((f) => (
-            <div key={f.name} className="flex gap-4 rounded-2xl bg-black/5 p-4">
+            <div key={f.name} className="flex gap-4 rounded-2xl bg-white p-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#32A69A] text-white">
                 <f.icon className="h-6 w-6" />
               </div>
@@ -57,7 +57,7 @@ export function RulesScreen({ onNext }: { onNext: () => void }) {
 
         <button
           onClick={onNext}
-          className="mt-4 rounded-xl bg-black px-10 py-4 text-lg font-bold text-white shadow-lg shadow-black/20 transition hover:bg-black/85 active:scale-95"
+          className="mt-4 rounded-xl bg-white px-10 py-4 text-lg font-bold text-black shadow-lg shadow-white/20 transition hover:bg-white/90 active:scale-95"
         >
           НАЧАТЬ
         </button>

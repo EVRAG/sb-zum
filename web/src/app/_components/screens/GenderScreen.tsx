@@ -39,10 +39,10 @@ export function GenderScreen({ selectedGender, onSelect, onNext }: Props) {
           disabled={!selectedGender}
           onClick={onNext}
           className={clsx(
-            "rounded-xl px-10 py-4 text-lg font-bold text-white transition active:scale-95",
+            "rounded-xl px-10 py-4 text-lg font-bold transition active:scale-95",
             selectedGender
-              ? "bg-black shadow-lg shadow-black/20 hover:bg-black/85"
-              : "bg-black/20 text-black/40 cursor-not-allowed",
+              ? "bg-white text-black shadow-lg shadow-white/20 hover:bg-white/90"
+              : "bg-white/50 text-black/40 cursor-not-allowed",
           )}
         >
           Далее
@@ -69,8 +69,8 @@ function GenderCard({
       className={clsx(
         "flex aspect-[4/5] flex-col items-center justify-center gap-4 rounded-2xl border-2 transition-all",
         active
-          ? "border-black bg-black/5 shadow-inner"
-          : "border-black/5 bg-black/5 hover:border-black/10",
+          ? "border-black bg-white shadow-inner"
+          : "border-black/5 bg-white hover:border-black/10",
       )}
     >
       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#F2B077] to-[#F27272] text-3xl font-bold text-white">

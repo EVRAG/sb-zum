@@ -50,7 +50,7 @@ export function Snowfall({
 
     const rnd = (min: number, max: number) => min + Math.random() * (max - min);
 
-    const speedK = 1 / 9;
+    const speedK = 1 / 5;
 
     const init = () => {
       const w = window.innerWidth;
@@ -62,8 +62,8 @@ export function Snowfall({
           y: rnd(-h, h),
           r,
           vx: rnd(-0.25, 0.25) * speedK,
-          vy: (rnd(0.35, 1.15) + r * 0.22) * speedK,
-          a: rnd(0.25, 0.65),
+          vy: (rnd(0.5, 1.4) + r * 0.3) * speedK,
+          a: rnd(0.5, 0.9),
         };
       });
     };
@@ -114,7 +114,7 @@ export function Snowfall({
       ref={canvasRef}
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0"
-      style={{ opacity: 0.55 }}
+      style={{ opacity: 0.85 }}
     />
   );
 }

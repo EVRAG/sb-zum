@@ -13,7 +13,7 @@ export function DoneScreen({ onRestart }: { onRestart: () => void }) {
         </p>
         <button
           onClick={onRestart}
-          className="rounded-xl bg-black px-10 py-4 text-lg font-bold text-white shadow-lg shadow-black/20 transition hover:bg-black/85 active:scale-95"
+          className="rounded-xl bg-white px-10 py-4 text-lg font-bold text-black shadow-lg shadow-white/20 transition hover:bg-white/90 active:scale-95"
         >
           СГЕНЕРИРОВАТЬ ЕЩЕ
         </button>

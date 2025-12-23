@@ -23,14 +23,12 @@ body {
   min-height: 100vh;
   color: #111111;
   font-family: var(--font-sans);
-  background-color: #ffffff;
-  background-image: radial-gradient(circle at 18% 18%, rgba(242, 176, 119, 0.18), transparent 34%),
-    radial-gradient(circle at 82% 22%, rgba(242, 231, 196, 0.35), transparent 45%),
-    radial-gradient(circle at 25% 85%, rgba(242, 231, 196, 0.28), transparent 52%),
-    radial-gradient(circle at 85% 78%, rgba(242, 176, 119, 0.14), transparent 46%),
-    linear-gradient(120deg, #ffffff 0%, #ffffff 42%, #f2e7c4 62%, #f2b077 78%, #ffffff 100%);
-  background-size: 260% 260%, 260% 260%, 260% 260%, 260% 260%, 460% 460%;
-  animation: gradientFlow 36s ease-in-out infinite, blobs 48s ease-in-out infinite;
+  background-color: #f2e7c4;
+  background-image: url('/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 a {
@@ -38,26 +36,3 @@ a {
   text-decoration: none;
 }
 
-@keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%, 100% 20%, 0% 80%, 80% 100%, 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%, 0% 40%, 100% 60%, 20% 0%, 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%, 100% 20%, 0% 80%, 80% 100%, 0% 50%;
-  }
-}
-
-@keyframes blobs {
-  0% {
-    background-position: 10% 20%, 85% 10%, 30% 80%, 80% 75%, 0% 0%;
-  }
-  50% {
-    background-position: 20% 30%, 70% 5%, 25% 70%, 70% 85%, 100% 100%;
-  }
-  100% {
-    background-position: 10% 20%, 85% 10%, 30% 80%, 80% 75%, 0% 0%;
-  }
-}

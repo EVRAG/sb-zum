@@ -19,13 +19,13 @@ export function ReviewScreen({ onAccept, onRetry }: Props) {
         <div className="flex w-full flex-col gap-4 sm:flex-row sm:justify-center">
           <button
             onClick={onAccept}
-            className="rounded-xl bg-black px-10 py-4 text-lg font-bold text-white shadow-lg shadow-black/20 transition hover:bg-black/85 active:scale-95"
+            className="rounded-xl bg-white px-10 py-4 text-lg font-bold text-black shadow-lg shadow-white/20 transition hover:bg-white/90 active:scale-95"
           >
             ДАЛЕЕ
           </button>
           <button
             onClick={onRetry}
-            className="rounded-xl bg-black/10 px-10 py-4 text-lg font-bold text-black hover:bg-black/15 transition active:scale-95"
+            className="rounded-xl bg-white px-10 py-4 text-lg font-bold text-black shadow-lg shadow-white/20 transition hover:bg-white/90 active:scale-95"
           >
             ЕЩЕ РАЗ
           </button>

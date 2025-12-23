@@ -51,10 +51,10 @@ export function LocationScreen({ locations, selectedId, onSelect, onNext }: Prop
           disabled={!selectedId}
           onClick={onNext}
           className={clsx(
-            "rounded-xl px-10 py-4 text-lg font-bold text-white transition active:scale-95",
+            "rounded-xl px-10 py-4 text-lg font-bold transition active:scale-95",
             selectedId
-              ? "bg-black shadow-lg shadow-black/20 hover:bg-black/85"
-              : "bg-black/20 text-black/40 cursor-not-allowed",
+              ? "bg-white text-black shadow-lg shadow-white/20 hover:bg-white/90"
+              : "bg-white/50 text-black/40 cursor-not-allowed",
           )}
         >
           ДАЛЕЕ

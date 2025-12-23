@@ -23,10 +23,10 @@ export function CaptureScreen({ isCapturing, onCapture }: Props) {
             onClick={onCapture}
             disabled={isCapturing}
             className={clsx(
-              "rounded-xl px-10 py-5 text-xl font-bold text-white transition active:scale-95",
+              "rounded-xl px-10 py-5 text-xl font-bold transition active:scale-95",
               isCapturing
-                ? "bg-black/20 text-black/40 cursor-not-allowed"
-                : "bg-black shadow-lg shadow-black/20 hover:bg-black/85",
+                ? "bg-white/50 text-black/40 cursor-not-allowed"
+                : "bg-white text-black shadow-lg shadow-white/20 hover:bg-white/90",
             )}
           >
             {isCapturing ? "ОБРАБОТКА..." : "СДЕЛАТЬ ФОТО"}
