@@ -136,6 +136,13 @@ export default function Home() {
   const handleCapture = () => {
     if (captureTimerRef.current) clearTimeout(captureTimerRef.current);
     setIsCapturing(true);
+    // explicit event when user clicks "Сделать фото"
+    sendJson({
+      step: "capture-make-photo",
+      gender,
+      locationId,
+      ts: Date.now(),
+    });
     // re-emit capture when user actually presses the button
     emitStep("capture");
 
