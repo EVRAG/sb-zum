@@ -124,8 +124,7 @@ export default function Home() {
       gender,
       locationId,
     };
-    // User request: no meta/actions, just a step (plus timestamp)
-    sendJson({ step: payload.step, ts: Date.now() });
+    sendJson({ ...payload, ts: Date.now() });
   };
 
   // emit on every step change
