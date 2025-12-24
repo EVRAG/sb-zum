@@ -11,7 +11,7 @@ export type Step =
 export type Gender = "male" | "female";
 
 export type LocationCard = {
-  id: string;
+  id: number;
   title: string;
   subtitle?: string;
   color: string;

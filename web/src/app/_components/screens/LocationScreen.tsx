@@ -5,8 +5,8 @@ import type { LocationCard } from "../../_types/flow";
 
 type Props = {
   locations: LocationCard[];
-  selectedId: string | null;
-  onSelect: (id: string) => void;
+  selectedId: number | null;
+  onSelect: (id: number) => void;
   onNext: () => void;
 };
 

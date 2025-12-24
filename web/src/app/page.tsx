@@ -16,7 +16,7 @@ import type { Gender, LocationCard, Step } from "./_types/flow";
 
 const LOCATIONS: LocationCard[] = [
   {
-    id: "valday",
+    id: 1,
     title: "Валдай",
     subtitle: "Хвойные леса",
     color: "#60a5fa",
@@ -24,7 +24,7 @@ const LOCATIONS: LocationCard[] = [
       "https://images.unsplash.com/photo-1582053433976-25c00369fc93?auto=format&fit=crop&w=512&q=80",
   },
   {
-    id: "tver",
+    id: 2,
     title: "Тверь",
     subtitle: "Исторический центр",
     color: "#f472b6",
@@ -32,7 +32,7 @@ const LOCATIONS: LocationCard[] = [
       "https://images.unsplash.com/photo-1614926857083-7be149266cda?auto=format&fit=crop&w=512&q=80",
   },
   {
-    id: "seliger",
+    id: 3,
     title: "Озеро Селигер",
     subtitle: "Водная гладь",
     color: "#38bdf8",
@@ -40,7 +40,7 @@ const LOCATIONS: LocationCard[] = [
       "https://images.unsplash.com/photo-1614705827065-62c3dc488f40?auto=format&fit=crop&w=512&q=80",
   },
   {
-    id: "torzhok",
+    id: 4,
     title: "Торжок",
     subtitle: "Златошвей",
     color: "#a855f7",
@@ -48,7 +48,7 @@ const LOCATIONS: LocationCard[] = [
       "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=512&q=80",
   },
   {
-    id: "kalyazin",
+    id: 5,
     title: "Калязин",
     subtitle: "Колокольня",
     color: "#22d3ee",
@@ -56,7 +56,7 @@ const LOCATIONS: LocationCard[] = [
       "https://images.unsplash.com/photo-1586348943529-beaae6c28db9?auto=format&fit=crop&w=512&q=80",
   },
   {
-    id: "andreevskiy",
+    id: 6,
     title: "Андреевский",
     subtitle: "Усадьба",
     color: "#fbbf24",
@@ -64,7 +64,7 @@ const LOCATIONS: LocationCard[] = [
       "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&w=512&q=80",
   },
   {
-    id: "likhoslavl",
+    id: 7,
     title: "Лихославль",
     subtitle: "Ремёсла",
     color: "#34d399",
@@ -72,7 +72,7 @@ const LOCATIONS: LocationCard[] = [
       "https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=512&q=80",
   },
   {
-    id: "rzev",
+    id: 8,
     title: "Ржев",
     subtitle: "Панорамы",
     color: "#fb7185",
@@ -84,7 +84,7 @@ const LOCATIONS: LocationCard[] = [
 type StepPayload = {
   step: Step;
   gender: Gender | null;
-  locationId: string | null;
+  locationId: number | null;
 };
 
 const STEP_PATHS: Step[] = [
@@ -110,7 +110,7 @@ export default function Home() {
   const WS_URL = getDefaultWsUrl();
   const [step, setStep] = useState<Step>("intro");
   const [gender, setGender] = useState<Gender | null>(null);
-  const [locationId, setLocationId] = useState<string | null>(null);
+  const [locationId, setLocationId] = useState<number | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [progress, setProgress] = useState(0);
   const captureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
