@@ -6,7 +6,8 @@ export type Step =
   | "capture"
   | "capture_done"
   | "loading"
-  | "done";
+  | "done"
+  | "qr";
 
 export type Gender = "male" | "female";
 

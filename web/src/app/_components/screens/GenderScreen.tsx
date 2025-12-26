@@ -11,13 +11,13 @@ type Props = {
 
 export function GenderScreen({ selectedGender, onSelect, onNext }: Props) {
   return (
-    <div className="flex min-h-screen w-full items-center justify-center px-6 py-16 text-black sm:py-20 lg:px-8">
+    <div className="flex min-h-screen w-full items-center justify-center px-6 py-16 text-white sm:py-20 lg:px-8">
       <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center gap-8 text-center">
         <div className="space-y-2">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-[#BF5468]">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-white">
             Настройка генерации
           </h2>
-          <p className="text-3xl font-bold text-black">Укажите пол</p>
+          <p className="text-3xl font-bold text-white">Укажите пол</p>
         </div>
 
         <div className="grid w-full max-w-xl grid-cols-2 gap-6">

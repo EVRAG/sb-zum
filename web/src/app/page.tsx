@@ -96,6 +96,7 @@ const STEP_PATHS: Step[] = [
   "capture_done",
   "loading",
   "done",
+  "qr",
 ];
 
 function parseStepFromPath(pathname: string): Step {
@@ -113,10 +114,25 @@ export default function Home() {
   const [locationId, setLocationId] = useState<number | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [showPrintButton, setShowPrintButton] = useState<boolean>(true);
   const captureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const { status, sendJson } = useWebSocket(WS_URL);
+
+  // admin toggle stored in localStorage: showPrintButton = "true"/"false"
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const read = () => {
+      const raw = window.localStorage.getItem("showPrintButton");
+      if (raw === "true") setShowPrintButton(true);
+      else if (raw === "false") setShowPrintButton(false);
+    };
+    read();
+    const handler = () => read();
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
 
   const emitStep = (nextStep: Step) => {
     const payload: StepPayload = {
@@ -245,16 +261,35 @@ export default function Home() {
   } else if (step === "done") {
     screen = (
       <DoneScreen
-        onQrAndPrint={() =>
+        primaryLabel={showPrintButton ? "Получить QR код и распечатать" : "Скачать по QR коду"}
+        onPrimary={() => {
           sendJson({
-            step: "create-qr-and-print",
+            step: showPrintButton ? "create-qr-and-print" : "create-qr",
             gender,
             locationId,
             ts: Date.now(),
-          })
-        }
+          });
+          setStep("qr");
+        }}
         onRestart={resetFlow}
       />
+    );
+  } else if (step === "qr") {
+    screen = (
+      <div className="flex min-h-screen w-full items-center justify-center px-6 py-16 text-white sm:py-20 lg:px-8">
+        <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center gap-8 text-center">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-bold text-white">Ваш QR код для скачивания фото</h2>
+            <p className="text-lg text-white/90">Появится на экране. Пока можете начать заново.</p>
+          </div>
+          <button
+            onClick={resetFlow}
+            className="rounded-xl bg-white px-10 py-4 text-lg font-bold text-black shadow-lg shadow-white/20 transition hover:bg-white/90 active:scale-95"
+          >
+            Сгенерировать еще
+          </button>
+        </div>
+      </div>
     );
   }
 

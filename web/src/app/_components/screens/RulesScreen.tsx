@@ -32,13 +32,13 @@ const features = [
 
 export function RulesScreen({ onNext }: { onNext: () => void }) {
   return (
-    <div className="flex min-h-screen w-full items-center justify-center px-6 py-16 text-black sm:py-20 lg:px-8">
+    <div className="flex min-h-screen w-full items-center justify-center px-6 py-16 text-white sm:py-20 lg:px-8">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center gap-8 text-center">
         <div className="space-y-2">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-[#BF5468]">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-white">
             Важно перед съемкой
           </h2>
-          <p className="text-3xl font-bold text-black sm:text-4xl">Несколько простых правил</p>
+          <p className="text-3xl font-bold text-white sm:text-4xl">Несколько простых правил</p>
         </div>
 
         <div className="grid w-full grid-cols-1 gap-6 text-left sm:grid-cols-2">
