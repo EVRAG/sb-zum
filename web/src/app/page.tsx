@@ -302,7 +302,8 @@ export default function Home() {
     step === "capture" ||
     step === "capture_done" ||
     step === "loading" ||
-    step === "done"
+    step === "done" ||
+    step === "qr"
   ) {
     return <main>{screen}</main>;
   }

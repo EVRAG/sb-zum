@@ -10,9 +10,9 @@ export function IntroScreen({ onNext }: { onNext: () => void }) {
           <Image
             src="/logo.svg"
             alt="Logo"
-            width={160}
-            height={160}
-            style={{ width: '160px', height: '160px' }}
+            width={80}
+            height={80}
+            style={{ width: '80px', height: '80px' }}
             priority
           />
         </div>

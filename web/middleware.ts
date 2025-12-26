@@ -9,6 +9,7 @@ const STEPS = new Set([
   "location",
   "capture",
   "capture_done",
+  "qr",
   // Backwards compat: old route
   "review",
   "loading",
