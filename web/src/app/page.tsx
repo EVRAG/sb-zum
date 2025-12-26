@@ -21,7 +21,7 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Хвойные леса",
     color: "#60a5fa",
     image:
-      "https://images.unsplash.com/photo-1582053433976-25c00369fc93?auto=format&fit=crop&w=512&q=80",
+      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-1.jpg",
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Исторический центр",
     color: "#f472b6",
     image:
-      "https://images.unsplash.com/photo-1614926857083-7be149266cda?auto=format&fit=crop&w=512&q=80",
+      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-2.jpg",
   },
   {
     id: 3,
@@ -37,7 +37,7 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Водная гладь",
     color: "#38bdf8",
     image:
-      "https://images.unsplash.com/photo-1614705827065-62c3dc488f40?auto=format&fit=crop&w=512&q=80",
+      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-3.jpg",
   },
   {
     id: 4,
@@ -45,7 +45,7 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Златошвей",
     color: "#a855f7",
     image:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=512&q=80",
+      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-4.jpg",
   },
   {
     id: 5,
@@ -53,7 +53,7 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Колокольня",
     color: "#22d3ee",
     image:
-      "https://images.unsplash.com/photo-1586348943529-beaae6c28db9?auto=format&fit=crop&w=512&q=80",
+      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-5.jpg",
   },
   {
     id: 6,
@@ -61,7 +61,7 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Усадьба",
     color: "#fbbf24",
     image:
-      "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&w=512&q=80",
+      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-6.jpg",
   },
   {
     id: 7,
@@ -69,7 +69,7 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Ремёсла",
     color: "#34d399",
     image:
-      "https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=512&q=80",
+      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-7.jpg",
   },
   {
     id: 8,
@@ -77,7 +77,7 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Панорамы",
     color: "#fb7185",
     image:
-      "https://images.unsplash.com/photo-1492724724894-7464c27d0ceb?auto=format&fit=crop&w=512&q=80",
+      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-8.jpg",
   },
 ];
 
