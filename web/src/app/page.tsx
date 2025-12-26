@@ -149,7 +149,7 @@ export default function Home() {
     captureTimerRef.current = setTimeout(() => {
       setIsCapturing(false);
       setStep("capture_done");
-    }, 5000);
+    }, 6000);
   };
 
   const handleLoading = () => {
@@ -243,7 +243,19 @@ export default function Home() {
   } else if (step === "loading") {
     screen = <LoadingScreen progress={progress} />;
   } else if (step === "done") {
-    screen = <DoneScreen onRestart={resetFlow} />;
+    screen = (
+      <DoneScreen
+        onQrAndPrint={() =>
+          sendJson({
+            step: "create-qr-and-print",
+            gender,
+            locationId,
+            ts: Date.now(),
+          })
+        }
+        onRestart={resetFlow}
+      />
+    );
   }
 
   // Intro: render full-screen without chrome
