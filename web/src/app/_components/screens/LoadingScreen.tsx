@@ -30,7 +30,7 @@ export function LoadingScreen({ progress }: { progress: number }) {
             />
           </div>
           <p className="text-sm font-medium text-white/90">
-            Пожалуйста, подождите около 15 секунд...
+            Пожалуйста, подождите около 30 секунд...
           </p>
         </div>
       </div>

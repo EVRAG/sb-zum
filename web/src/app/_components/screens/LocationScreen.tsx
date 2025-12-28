@@ -35,14 +35,10 @@ export function LocationScreen({ locations, selectedId, onSelect, onNext }: Prop
             >
               <img
                 src={loc.image}
-                alt={loc.title}
+                alt=""
                 className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="absolute bottom-3 left-3 text-left">
-                <p className="text-sm font-bold text-white">{loc.title}</p>
-                {loc.subtitle && <p className="text-[10px] text-white/70">{loc.subtitle}</p>}
-              </div>
             </button>
           ))}
         </div>

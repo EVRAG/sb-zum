@@ -20,64 +20,63 @@ const LOCATIONS: LocationCard[] = [
     title: "Валдай",
     subtitle: "Хвойные леса",
     color: "#60a5fa",
-    image:
-      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-1.jpg",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/1.png",
   },
   {
     id: 2,
     title: "Тверь",
     subtitle: "Исторический центр",
     color: "#f472b6",
-    image:
-      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-2.jpg",
-  },
-  {
-    id: 3,
-    title: "Озеро Селигер",
-    subtitle: "Водная гладь",
-    color: "#38bdf8",
-    image:
-      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-3.jpg",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/2.png",
   },
   {
     id: 4,
     title: "Торжок",
     subtitle: "Златошвей",
     color: "#a855f7",
-    image:
-      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-4.jpg",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/4.png",
   },
   {
     id: 5,
     title: "Калязин",
     subtitle: "Колокольня",
     color: "#22d3ee",
-    image:
-      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-5.jpg",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/5.png",
   },
   {
     id: 6,
     title: "Андреевский",
     subtitle: "Усадьба",
     color: "#fbbf24",
-    image:
-      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-6.jpg",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/6.png",
   },
   {
     id: 7,
     title: "Лихославль",
     subtitle: "Ремёсла",
     color: "#34d399",
-    image:
-      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-7.jpg",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/7.png",
   },
   {
     id: 8,
     title: "Ржев",
     subtitle: "Панорамы",
     color: "#fb7185",
-    image:
-      "https://storage.yandexcloud.net/voting-ett/Zavidovo/item-8.jpg",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/8.png",
+  },
+  {
+    id: 9,
+    title: "Локация 9",
+    subtitle: "Новая точка маршрута",
+    color: "#818cf8",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/9.png",
+  },
+  {
+    id: 10,
+    title: "Локация 10",
+    subtitle: "Новая точка маршрута",
+    color: "#f97316",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/10.png",
   },
 ];
 
@@ -171,7 +170,7 @@ export default function Home() {
   const handleLoading = () => {
     setStep("loading");
     setProgress(0);
-    const duration = 15000;
+    const duration = 30000;
     const started = Date.now();
     if (loadingTimerRef.current) clearInterval(loadingTimerRef.current);
 
@@ -218,6 +217,17 @@ export default function Home() {
     setProgress(0);
     setIsCapturing(false);
     setStep("intro");
+  };
+
+  const restartGeneration = () => {
+    sendJson({
+      step: "intro",
+      gender: null,
+      locationId: null,
+      command: "restart",
+      ts: Date.now(),
+    });
+    resetFlow();
   };
 
   let screen = null;
@@ -271,7 +281,7 @@ export default function Home() {
           });
           setStep("qr");
         }}
-        onRestart={resetFlow}
+        onRestart={restartGeneration}
       />
     );
   } else if (step === "qr") {
@@ -283,7 +293,7 @@ export default function Home() {
             <p className="text-lg text-white/90">Появится на экране. Пока можете начать заново.</p>
           </div>
           <button
-            onClick={resetFlow}
+            onClick={restartGeneration}
             className="rounded-xl bg-white px-10 py-4 text-lg font-bold text-black shadow-lg shadow-white/20 transition hover:bg-white/90 active:scale-95"
           >
             Сгенерировать еще
