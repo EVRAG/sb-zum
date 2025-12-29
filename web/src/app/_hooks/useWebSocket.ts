@@ -16,26 +16,74 @@ function getRuntimeEnv(): RuntimeEnv {
 
 export function useWebSocket(url: string) {
   const wsRef = useRef<WebSocket | null>(null);
+  const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pingTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [status, setStatus] = useState<Status>("connecting");
   const [lastMessage, setLastMessage] = useState<unknown>(null);
 
   useEffect(() => {
-    const ws = new WebSocket(url);
-    wsRef.current = ws;
+    let stopped = false;
 
-    ws.addEventListener("open", () => setStatus("open"));
-    ws.addEventListener("close", () => setStatus("closed"));
-    ws.addEventListener("error", () => setStatus("closed"));
-    ws.addEventListener("message", (event) => {
-      try {
-        setLastMessage(JSON.parse(event.data));
-      } catch {
-        setLastMessage(event.data);
+    const clearTimers = () => {
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
+        reconnectTimer.current = null;
       }
-    });
+      if (pingTimer.current) {
+        clearInterval(pingTimer.current);
+        pingTimer.current = null;
+      }
+    };
+
+    const scheduleReconnect = () => {
+      if (stopped || reconnectTimer.current) return;
+      reconnectTimer.current = setTimeout(() => {
+        reconnectTimer.current = null;
+        connect();
+      }, 2000);
+    };
+
+    const connect = () => {
+      const ws = new WebSocket(url);
+      wsRef.current = ws;
+      setStatus("connecting");
+
+      ws.addEventListener("open", () => {
+        setStatus("open");
+        // Periodic ping to keep idle connections alive behind proxies/load balancers
+        pingTimer.current = setInterval(() => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: "ping", ts: Date.now() }));
+          }
+        }, 15000);
+      });
+
+      ws.addEventListener("close", () => {
+        setStatus("closed");
+        clearTimers();
+        if (!stopped) scheduleReconnect();
+      });
+
+      ws.addEventListener("error", () => {
+        setStatus("closed");
+        ws.close();
+      });
+
+      ws.addEventListener("message", (event) => {
+        try {
+          setLastMessage(JSON.parse(event.data));
+        } catch {
+          setLastMessage(event.data);
+        }
+      });
+    };
+
+    connect();
 
     return () => {
-      ws.close();
+      stopped = true;
+      clearTimers();
+      wsRef.current?.close();
     };
   }, [url]);
 

@@ -43,6 +43,15 @@ async function main() {
   });
 
   const wss = new WebSocketServer({ server, path: "/ws" });
+  // Keep idle connections alive (e.g., behind proxies with idle timeouts)
+  const heartbeatInterval = setInterval(() => {
+    wss.clients.forEach((client) => {
+      if (client.readyState === 1) {
+        client.ping();
+      }
+    });
+  }, 20000);
+
   wss.on("connection", (ws, req) => {
     const ip = req.socket.remoteAddress;
     ws.send(
@@ -71,6 +80,11 @@ async function main() {
   server.listen(PORT, HOSTNAME, () => {
     console.log(`[app] listening on http://${HOSTNAME}:${PORT}`);
     console.log(`[ws] listening on ws://${HOSTNAME}:${PORT}/ws`);
+  });
+
+  process.on("SIGINT", () => {
+    clearInterval(heartbeatInterval);
+    process.exit(0);
   });
 }
 
