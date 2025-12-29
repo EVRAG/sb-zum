@@ -30,6 +30,13 @@ const LOCATIONS: LocationCard[] = [
     image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/2.png",
   },
   {
+    id: 3,
+    title: "Озеро Селигер",
+    subtitle: "Водная гладь",
+    color: "#38bdf8",
+    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/3.png",
+  },
+  {
     id: 4,
     title: "Торжок",
     subtitle: "Златошвей",
@@ -70,13 +77,6 @@ const LOCATIONS: LocationCard[] = [
     subtitle: "Новая точка маршрута",
     color: "#818cf8",
     image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/9.png",
-  },
-  {
-    id: 10,
-    title: "Локация 10",
-    subtitle: "Новая точка маршрута",
-    color: "#f97316",
-    image: "https://storage.yandexcloud.net/voting-ett/Zavidovo/10.png",
   },
 ];
 
