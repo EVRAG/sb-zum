@@ -6,7 +6,8 @@ import { getDefaultWsUrl, useWebSocket } from "../_hooks/useWebSocket";
 export default function AdminPage() {
   const [showPrintButton, setShowPrintButton] = useState<boolean>(true);
   const WS_URL = getDefaultWsUrl();
-  const { sendJson } = useWebSocket(WS_URL);
+  const { sendJson, status } = useWebSocket(WS_URL);
+  const [pendingToggle, setPendingToggle] = useState<boolean | null>(null);
 
   useEffect(() => {
     const raw = window.localStorage.getItem("showPrintButton");
@@ -14,14 +15,29 @@ export default function AdminPage() {
     else setShowPrintButton(true);
   }, []);
 
-  const toggle = (value: boolean) => {
-    setShowPrintButton(value);
-    window.localStorage.setItem("showPrintButton", value ? "true" : "false");
-    sendJson({
+  const broadcast = (value: boolean) => {
+    const payload = {
       type: "admin_print_toggle",
       showPrintButton: value,
       ts: Date.now(),
-    });
+    };
+    const ok = sendJson(payload);
+    if (!ok) setPendingToggle(value);
+  };
+
+  // retry pending toggle once WS becomes open
+  useEffect(() => {
+    if (pendingToggle === null) return;
+    if (status === "open") {
+      broadcast(pendingToggle);
+      setPendingToggle(null);
+    }
+  }, [pendingToggle, status]);
+
+  const toggle = (value: boolean) => {
+    setShowPrintButton(value);
+    window.localStorage.setItem("showPrintButton", value ? "true" : "false");
+    broadcast(value);
   };
 
   return (
