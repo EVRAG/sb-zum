@@ -29,8 +29,23 @@ function Wait-FileReady($path, $timeoutSec = 60) {
 
 function Print-Image($path) {
     Write-Log "Printing: $path"
-    $p = Start-Process -FilePath $path -Verb PrintTo -ArgumentList "`"$PrinterName`"" -PassThru -WindowStyle Hidden -ErrorAction Stop
-    $p.WaitForExit(30000) | Out-Null
+    # First try shell PrintTo (uses file association)
+    try {
+        $p = Start-Process -FilePath $path -Verb PrintTo -ArgumentList "`"$PrinterName`"" -PassThru -WindowStyle Hidden -ErrorAction Stop
+        $p.WaitForExit(30000) | Out-Null
+        return
+    } catch {
+        Write-Log "PrintTo failed, will try mspaint /pt : $_"
+    }
+
+    # Fallback: mspaint /pt supports most image types
+    try {
+        $mspaint = Join-Path $env:SystemRoot "System32\\mspaint.exe"
+        $p = Start-Process -FilePath $mspaint -ArgumentList "/pt", "`"$path`"", "`"$PrinterName`"" -PassThru -WindowStyle Hidden -ErrorAction Stop
+        $p.WaitForExit(30000) | Out-Null
+    } catch {
+        throw
+    }
 }
 
 $fsw = New-Object IO.FileSystemWatcher $WatchedPath, "*.*"
