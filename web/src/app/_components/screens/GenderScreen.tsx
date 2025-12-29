@@ -10,6 +10,13 @@ type Props = {
 };
 
 export function GenderScreen({ selectedGender, onSelect, onNext }: Props) {
+  const options: Array<{ key: string; label: string; badge: string; gender: Gender }> = [
+    { key: "man", label: "Мужчина", badge: "М", gender: "male" },
+    { key: "woman", label: "Женщина", badge: "Ж", gender: "female" },
+    { key: "boy", label: "Мальчик", badge: "М", gender: "male" },
+    { key: "girl", label: "Девочка", badge: "Д", gender: "female" },
+  ];
+
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-6 py-16 text-white sm:py-20 lg:px-8">
       <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center gap-8 text-center">
@@ -20,19 +27,17 @@ export function GenderScreen({ selectedGender, onSelect, onNext }: Props) {
           <p className="text-3xl font-bold text-white">Укажите пол</p>
         </div>
 
-        <div className="grid w-full max-w-xl grid-cols-2 gap-6">
-          <GenderCard
-            label="М"
-            gender="male"
-            active={selectedGender === "male"}
-            onClick={() => onSelect("male")}
-          />
-          <GenderCard
-            label="Ж"
-            gender="female"
-            active={selectedGender === "female"}
-            onClick={() => onSelect("female")}
-          />
+        <div className="grid w-full max-w-xl grid-cols-2 gap-4 sm:gap-6">
+          {options.map((opt) => (
+            <GenderCard
+              key={opt.key}
+              label={opt.label}
+              badge={opt.badge}
+              gender={opt.gender}
+              active={selectedGender === opt.gender}
+              onClick={() => onSelect(opt.gender)}
+            />
+          ))}
         </div>
 
         <button
@@ -54,11 +59,13 @@ export function GenderScreen({ selectedGender, onSelect, onNext }: Props) {
 
 function GenderCard({
   label,
+  badge,
   gender,
   active,
   onClick,
 }: {
   label: string;
+  badge: string;
   gender: Gender;
   active: boolean;
   onClick: () => void;
@@ -74,9 +81,9 @@ function GenderCard({
       )}
     >
       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#F2B077] to-[#F27272] text-3xl font-bold text-white">
-        {label}
+        {badge}
       </div>
-      <p className="text-lg font-bold text-black">{gender === "male" ? "Мужской" : "Женский"}</p>
+      <p className="text-lg font-bold text-black">{label}</p>
     </button>
   );
 }
