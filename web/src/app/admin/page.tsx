@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getDefaultWsUrl, useWebSocket } from "../_hooks/useWebSocket";
 
 export default function AdminPage() {
   const [showPrintButton, setShowPrintButton] = useState<boolean>(true);
+  const WS_URL = getDefaultWsUrl();
+  const { sendJson } = useWebSocket(WS_URL);
 
   useEffect(() => {
     const raw = window.localStorage.getItem("showPrintButton");
@@ -14,6 +17,11 @@ export default function AdminPage() {
   const toggle = (value: boolean) => {
     setShowPrintButton(value);
     window.localStorage.setItem("showPrintButton", value ? "true" : "false");
+    sendJson({
+      type: "admin_print_toggle",
+      showPrintButton: value,
+      ts: Date.now(),
+    });
   };
 
   return (

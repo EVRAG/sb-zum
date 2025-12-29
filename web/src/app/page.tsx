@@ -117,7 +117,7 @@ export default function Home() {
   const captureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { status, sendJson } = useWebSocket(WS_URL);
+  const { status, sendJson, lastMessage } = useWebSocket(WS_URL);
 
   // admin toggle stored in localStorage: showPrintButton = "true"/"false"
   useEffect(() => {
@@ -132,6 +132,20 @@ export default function Home() {
     window.addEventListener("storage", handler);
     return () => window.removeEventListener("storage", handler);
   }, []);
+
+  // react to admin broadcast via WS
+  useEffect(() => {
+    if (!lastMessage || typeof lastMessage !== "object") return;
+    const maybePayload = (lastMessage as { payload?: unknown; type?: string });
+    const payload = (maybePayload.payload ?? lastMessage) as { type?: string; showPrintButton?: unknown };
+    if (payload?.type === "admin_print_toggle" && typeof payload.showPrintButton === "boolean") {
+      const value = payload.showPrintButton;
+      setShowPrintButton(value);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("showPrintButton", value ? "true" : "false");
+      }
+    }
+  }, [lastMessage]);
 
   const emitStep = (nextStep: Step) => {
     const payload: StepPayload = {
