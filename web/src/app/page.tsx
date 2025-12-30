@@ -122,13 +122,29 @@ export default function Home() {
   // admin toggle stored in localStorage: showPrintButton = "true"/"false"
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const read = () => {
+    const readLocal = () => {
       const raw = window.localStorage.getItem("showPrintButton");
       if (raw === "true") setShowPrintButton(true);
       else if (raw === "false") setShowPrintButton(false);
     };
-    read();
-    const handler = () => read();
+    const fetchRemote = async () => {
+      try {
+        const res = await fetch("/api/admin/config");
+        if (res.ok) {
+          const data = (await res.json()) as { showPrintButton?: boolean };
+          if (typeof data.showPrintButton === "boolean") {
+            setShowPrintButton(data.showPrintButton);
+            window.localStorage.setItem("showPrintButton", data.showPrintButton ? "true" : "false");
+            return;
+          }
+        }
+      } catch {
+        // ignore fetch errors
+      }
+      readLocal();
+    };
+    fetchRemote();
+    const handler = () => readLocal();
     window.addEventListener("storage", handler);
     return () => window.removeEventListener("storage", handler);
   }, []);
