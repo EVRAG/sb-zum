@@ -114,6 +114,7 @@ export default function Home() {
   const [isCapturing, setIsCapturing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showPrintButton, setShowPrintButton] = useState<boolean>(true);
+  const [finalImageBase64, setFinalImageBase64] = useState<string | null>(null);
   const captureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -152,14 +153,25 @@ export default function Home() {
   // react to admin broadcast via WS
   useEffect(() => {
     if (!lastMessage || typeof lastMessage !== "object") return;
-    const maybePayload = (lastMessage as { payload?: unknown; type?: string });
-    const payload = (maybePayload.payload ?? lastMessage) as { type?: string; showPrintButton?: unknown };
+    const maybePayload = lastMessage as { payload?: unknown; type?: string; image_base64?: unknown };
+    const payload = (maybePayload.payload ?? lastMessage) as {
+      type?: string;
+      showPrintButton?: unknown;
+      image_base64?: unknown;
+    };
+
     if (payload?.type === "admin_print_toggle" && typeof payload.showPrintButton === "boolean") {
       const value = payload.showPrintButton;
       setShowPrintButton(value);
       if (typeof window !== "undefined") {
         window.localStorage.setItem("showPrintButton", value ? "true" : "false");
       }
+    }
+
+    // Save incoming image for later display on DONE screen
+    const incomingImage = payload?.image_base64;
+    if (typeof incomingImage === "string" && incomingImage.trim()) {
+      setFinalImageBase64(incomingImage);
     }
   }, [lastMessage]);
 
@@ -246,6 +258,7 @@ export default function Home() {
     setLocationId(null);
     setProgress(0);
     setIsCapturing(false);
+    setFinalImageBase64(null);
     setStep("intro");
   };
 
@@ -302,6 +315,7 @@ export default function Home() {
     screen = (
       <DoneScreen
         primaryLabel={showPrintButton ? "Получить QR код и распечатать" : "Скачать по QR коду"}
+        imageBase64={finalImageBase64}
         onPrimary={() => {
           sendJson({
             step: showPrintButton ? "create-qr-and-print" : "create-qr",
