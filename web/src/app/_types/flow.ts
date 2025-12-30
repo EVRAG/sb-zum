@@ -9,7 +9,7 @@ export type Step =
   | "done"
   | "qr";
 
-export type Gender = "male" | "female";
+export type Gender = "male" | "female" | "kid_male" | "kid_female";
 
 export type LocationCard = {
   id: number;
