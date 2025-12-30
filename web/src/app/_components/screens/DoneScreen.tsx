@@ -15,7 +15,7 @@ export function DoneScreen({ onRestart, primaryLabel, onPrimary }: Props) {
           <p className="text-4xl font-bold text-white">Путешествие собрано</p>
         </div>
         <p className="max-w-md text-lg text-white/90">
-          Ваше уникальное приключение готово. Хотите попробовать еще раз с другими настройками?
+          Если фото получилось неудачным — просто попробуйте сгенерировать ещё раз!
         </p>
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
           <button
