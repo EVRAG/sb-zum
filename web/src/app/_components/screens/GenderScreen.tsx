@@ -13,8 +13,8 @@ export function GenderScreen({ selectedGender, onSelect, onNext }: Props) {
   const options: Array<{ key: string; label: string; badge: string; gender: Gender }> = [
     { key: "man", label: "Мужчина", badge: "М", gender: "male" },
     { key: "woman", label: "Женщина", badge: "Ж", gender: "female" },
-    { key: "boy", label: "Мальчик", badge: "М", gender: "kid_male" },
-    { key: "girl", label: "Девочка", badge: "Д", gender: "kid_female" },
+    { key: "boy", label: "Мальчик", badge: "М", gender: "male" },
+    { key: "girl", label: "Девочка", badge: "Д", gender: "female" },
   ];
 
   return (
